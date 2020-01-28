@@ -1,0 +1,11 @@
+<% include layout/header %>
+
+<h1>User List</h1>
+<div class="container">
+  <ul class="list-group list-group-flush">
+  	<% users.forEach(function(user, index) { %>
+  	<li class="list-group-item"><%= user.first_name +" "+user.last_name %></li>
+  	<% }); %>
+  </ul>
+</div>
+<% include layout/footer %>
