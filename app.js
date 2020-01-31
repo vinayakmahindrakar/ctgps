@@ -5,10 +5,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-const expressSession = require('express-session');
+const session  = require('express-session');
 
 var indexController = require('./controllers/index');
 var userController = require('./controllers/user');
+var loginController = require('./controllers/login');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(expressValidator());
 app.use(cookieParser());
 
 app.use(session({
+  name: 'qid',
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
@@ -32,7 +34,7 @@ app.use(session({
 
 app.use('/', indexController);
 app.use('/user', userController);
-//app.use('/login', loginController);
+app.use('/login', loginController);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -14,7 +14,7 @@ router.get('/list', function(req, res, next) {
   	userModel.
 	  find().
 	  where('is_deleted').equals(false).
-	  select('first_name last_name').
+	  select('first_name last_name email').
 	  exec(function (err, users) {
 	  	if(!err) 
 		{
