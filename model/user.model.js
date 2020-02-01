@@ -29,10 +29,13 @@ var userSchema = new mongoose.Schema({
 
 userSchema.methods.generateHash = function(password){
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(9));
-}
+};
 
-userSchema.methods.validPassword = function(password){
-	return bcrypt.compare(password, this.password);
-}
+userSchema.methods.comparePassword = function(userPassword, password, cb){
+	bcrypt.compare(userPassword, password, function(err, res) {
+        if (err) return cb(err);
+        cb(null, res);
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);
