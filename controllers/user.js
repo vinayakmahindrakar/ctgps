@@ -11,20 +11,14 @@ router.get('/add', function(req, res, next) {
 router.get('/list', function(req, res, next) {
 	const title = 'User list';
   	
-  	userModel.
-	  find().
-	  where('is_deleted').equals(false).
-	  select('first_name last_name email').
-	  exec(function (err, users) {
-	  	if(!err) 
-		{
+	userModel.find({'is_deleted' : false}, 'first_name last_name email', function (err, users) {
+	  	if(!err){
 			res.render('user_list', {
 			  	users: users,
 			  	title: title
 		  });
 		}
-		else
-		{
+		else{
 			console.log(err);
 		}
 	});

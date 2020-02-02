@@ -2,7 +2,7 @@ const connection = require('./model');
 var createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
+//const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const session  = require('express-session');
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
-app.use(cookieParser());
+//app.use(cookieParser());
 
 app.use(session({
   name: 'qid',
@@ -31,6 +31,11 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true }
 }))
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
 
 app.use('/', indexController);
 app.use('/user', userController);

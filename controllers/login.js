@@ -10,23 +10,38 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
 	var body = req.body;
-
-	userModel.findOne({ email: body.email }, function(err, doc) {
-        if (err){
-        	console.log(err);
+	var form = {
+		password : body.password,
+		email : body.email
+	};
+	var errors = {};
+	userModel.findOne({ email: body.email }, function(error, doc) {
+        if (doc == null){
+        	errors.msg = 'Invalid Email';
+        	renderLogin(res, form, errors, title);
         }
         else{
         	var user = new userModel();
-        	user.comparePassword(body.password, doc.password, function(err, res) {
-	            if (err){
-	            	console.log('error 12'+err);
-	            } 
-	            else{
-	            	console.log('Password123: '+res); 
-	            }
-	        });	
+        	user.comparePassword(body.password, doc.password, function(err, isMatch) {
+	            if(!isMatch){
+            		errors.msg = 'Invalid Password';
+            	}
+            	else
+            	{
+            		return res.redirect('/user/list');
+            	}
+	            
+	            renderLogin(res, form, errors, title);
+	        });
         }
     });
 });
-
+function renderLogin(res, form, errors, title)
+{
+	res.render('login', {
+	  	form: form,
+	  	errors: errors,
+	  	title: title
+  	});
+}
 module.exports = router;
