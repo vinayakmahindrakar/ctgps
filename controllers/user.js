@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const userModel = mongoose.model('user');
+const session = require('express-session');
 
 router.get('/add', function(req, res, next) {
   const title = 'Add user';
@@ -9,19 +10,26 @@ router.get('/add', function(req, res, next) {
 });
 
 router.get('/list', function(req, res, next) {
-	const title = 'User list';
-  	
-	userModel.find({'is_deleted' : false}, 'first_name last_name email', function (err, users) {
-	  	if(!err){
-			res.render('user_list', {
-			  	users: users,
-			  	title: title
-		  });
-		}
-		else{
-			console.log(err);
-		}
-	});
+	var sess = req.session;
+	if (sess.email) {
+
+		const title = 'User list';
+	
+		userModel.find({'is_deleted' : false}, 'first_name last_name email', function (err, users) {
+		  	if(!err){
+				res.render('user_list', {
+				  	users: users,
+				  	title: title
+			  });
+			}
+			else{
+				console.log(err);
+			}
+		});
+	}
+	else{
+		return res.redirect('/login');
+	}
 });
 
 router.post('/add', function(req, res, next) {

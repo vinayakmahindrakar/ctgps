@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const session  = require('express-session');
 
-var indexController = require('./controllers/index');
+//var indexController = require('./controllers/index');
 var userController = require('./controllers/user');
 var loginController = require('./controllers/login');
 
@@ -24,20 +24,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 //app.use(cookieParser());
 
+/*app.use(session({
+	name: 'ctgps',
+	secret: 'sdfsde345345sf234wfr234',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { maxAge: 60000, secure: true }
+}));*/
+
 app.use(session({
-  name: 'qid',
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}))
+	name: 'ctgps',
+	secret: 'sdfsde345345sf234wfr234',
+	resave: false,
+	saveUninitialized: true
+}));
 
 if (app.get('env') === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
-  sess.cookie.secure = true // serve secure cookies
+	app.set('trust proxy', 1) // trust first proxy
+	sess.cookie.secure = true // serve secure cookies
 }
 
-app.use('/', indexController);
+//app.use('/', indexController);
 app.use('/user', userController);
 app.use('/login', loginController);
 

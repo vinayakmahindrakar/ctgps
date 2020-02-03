@@ -2,13 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const userModel = mongoose.model('user');
+const session = require('express-session');
 const title = 'Sign In';
+
 
 router.get('/', function(req, res, next) {
   res.render('login', {title: title});
 });
 
 router.post('/', function(req, res, next) {
+	var sess = req.session;
 	var body = req.body;
 	var form = {
 		password : body.password,
@@ -28,6 +31,7 @@ router.post('/', function(req, res, next) {
             	}
             	else
             	{
+            		sess.email = doc.email;
             		return res.redirect('/user/list');
             	}
 	            
