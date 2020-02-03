@@ -2,10 +2,17 @@ const connection = require('./model');
 var createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-//const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const session  = require('express-session');
+const mongoStore = require('connect-mongo')(session);
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/ctgps', {
+    useMongoClient: true
+});
+mongoose.Promise = global.Promise;
+const db = mongoose.connection
 
 //var indexController = require('./controllers/index');
 var userController = require('./controllers/user');
@@ -22,21 +29,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
-//app.use(cookieParser());
-
-/*app.use(session({
-	name: 'ctgps',
-	secret: 'sdfsde345345sf234wfr234',
-	resave: false,
-	saveUninitialized: true,
-	cookie: { maxAge: 60000, secure: true }
-}));*/
 
 app.use(session({
 	name: 'ctgps',
 	secret: 'sdfsde345345sf234wfr234',
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: true,
+	store: new mongoStore({ mongooseConnection: db })
 }));
 
 if (app.get('env') === 'production') {
