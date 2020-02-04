@@ -8,11 +8,7 @@ const session  = require('express-session');
 const mongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/ctgps', {
-    useMongoClient: true
-});
-mongoose.Promise = global.Promise;
-const db = mongoose.connection
+const db = mongoose.connection;
 
 //var indexController = require('./controllers/index');
 var userController = require('./controllers/user');
